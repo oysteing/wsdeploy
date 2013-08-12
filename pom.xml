@@ -87,9 +87,9 @@
 	</repositories>
 	
 	<scm>
-		<connection>scm:git:git@github.com:oysteing/ibmdeploy.git</connection>
-		<developerConnection>scm:git:git@github.com:oysteing/ibmdeploy.git</developerConnection>
-		<url>https://github.com/oysteing/ibmdeploy</url>
+		<connection>scm:git:git@github.com:oysteing/wsdeploy.git</connection>
+		<developerConnection>scm:git:git@github.com:oysteing/wsdeploy.git</developerConnection>
+		<url>https://github.com/oysteing/wsdeploy</url>
 	</scm>
 	
 	<distributionManagement>
