@@ -1,0 +1,16 @@
+<configuration>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Mute chatty IBM logs -->
+	<logger name="com.ibm.websphere.management.AdminClientFactory" level="error"/>
+	<logger name="com.ibm.ws.ssl.config.SSLConfigManager" level="warn"/>
+	<logger name="com.ibm.ws.security.config.SecurityObjectLocator" level="warn"/>
+
+	<root level="debug">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>
