@@ -21,7 +21,8 @@ public class AppManagerIT {
 
 	@Before
 	public void setUp() {
-		AdminClientConnectorProperties properties = new AdminClientConnectorProperties("10.0.0.6", 8880, "igor", "Test1234", TRUST_STORE);
+		System.setProperty("javax.net.ssl.trustStore", TRUST_STORE.getPath());
+		AdminClientConnectorProperties properties = new AdminClientConnectorProperties("10.0.0.6", 8880, "igor", "Test1234");
 		AdminClient adminClient = AdminClientConnectorProperties.createAdminClient(properties);
 		am = new AppManager(adminClient);
 	}

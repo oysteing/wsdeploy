@@ -36,7 +36,7 @@ public class AdminClientConnectorProperties extends Properties {
 	public AdminClientConnectorProperties() {
 		// Supports only SOAP - no RMI
 		setProperty(AdminClient.CONNECTOR_TYPE, AdminClient.CONNECTOR_TYPE_SOAP);
-		setAddress("localhost", 8879);
+		addAddressProperties("localhost", 8879);
 	}
 
 	/**
@@ -44,11 +44,10 @@ public class AdminClientConnectorProperties extends Properties {
 	 * 
 	 * @param username
 	 * @param password
-	 * @param trustStore
 	 */
-	public AdminClientConnectorProperties(String username, String password, File trustStore) {
+	public AdminClientConnectorProperties(String username, String password) {
 		this();
-		setSecurity(username, password, trustStore);
+		addSecurityProperties(username, password);
 	}
 
 	/**
@@ -59,7 +58,7 @@ public class AdminClientConnectorProperties extends Properties {
 	 */
 	public AdminClientConnectorProperties(String host, int port) {
 		this();
-		setAddress(host, port);
+		addAddressProperties(host, port);
 	}
 
 	/**
@@ -73,30 +72,22 @@ public class AdminClientConnectorProperties extends Properties {
 	 *            Deployment manager administrative user
 	 * @param password
 	 *            Password for deployment manager administrative user
-	 * @param trustStore
-	 *            JKS keystore with trusted CAs
 	 */
-	public AdminClientConnectorProperties(String host, int port, String username, String password, File trustStore) {
+	public AdminClientConnectorProperties(String host, int port, String username, String password) {
 		this();
-		setAddress(host, port);
-		setSecurity(username, password, trustStore);
+		addAddressProperties(host, port);
+		addSecurityProperties(username, password);
 	}
 
-	private void setAddress(String host, int port) {
+	private void addAddressProperties(String host, int port) {
 		setProperty(AdminClient.CONNECTOR_HOST, host);
 		setProperty(AdminClient.CONNECTOR_PORT, String.valueOf(port));
 	}
 
-	private void setSecurity(String username, String password, File trustStore) {
+	private void addSecurityProperties(String username, String password) {
 		setProperty(AdminClient.CONNECTOR_SECURITY_ENABLED, "true");
 		setProperty(AdminClient.USERNAME, username);
 		setProperty(AdminClient.PASSWORD, password);
-		if (trustStore != null) {
-			if (!trustStore.exists()) {
-				throw new RuntimeException("Trust store " + trustStore + " doesn't exist");
-			}
-			setProperty("javax.net.ssl.trustStore", trustStore.getPath());
-		}
 	}
 
 	/**

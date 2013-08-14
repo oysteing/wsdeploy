@@ -18,7 +18,8 @@ public class BpcManagerIT {
 
 	@Before
 	public void setUp() throws Exception {
-		AdminClientConnectorProperties properties = new AdminClientConnectorProperties("10.0.0.6", 8880, "igor", "Test1234", TRUST_STORE);
+		System.setProperty("javax.net.ssl.trustStore", TRUST_STORE.getPath());
+		AdminClientConnectorProperties properties = new AdminClientConnectorProperties("10.0.0.6", 8880, "igor", "Test1234");
 		AdminClient adminClient = AdminClientConnectorProperties.createAdminClient(properties);
 		bm = new BpcManager(adminClient);
 	}
