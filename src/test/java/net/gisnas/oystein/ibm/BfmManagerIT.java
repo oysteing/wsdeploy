@@ -16,7 +16,7 @@ public class BfmManagerIT {
 	public void testDeleteAllProcessInstances() {
 		System.setProperty("javax.net.ssl.trustStore", TRUST_STORE.getPath());
 		BfmManager bfm = new BfmManager(BFM_ENDPOINT, USERNAME, PASSWORD);
-		bfm.deleteAllProcessInstances(APP_NAME);
+		bfm.forceDeleteAllProcessInstances(APP_NAME);
 	}
 
 }

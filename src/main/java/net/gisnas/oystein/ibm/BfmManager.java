@@ -1,8 +1,11 @@
 package net.gisnas.oystein.ibm;
 
+import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.ws.BindingProvider;
 
@@ -20,6 +23,14 @@ public class BfmManager {
 
 	private static final Logger logger = LoggerFactory.getLogger(BfmManager.class);
 	private static final URL wsdlLocation = BFMJAXWSService.class.getResource("/bfmjaxws.war/WEB-INF/wsdl/com/ibm/bpe/api/jaxws/BFMJAXWSService.wsdl");
+	private static final Set<String> deletableProcessStates = new HashSet<>();
+	
+	{
+		deletableProcessStates.add("STATE_FINISHED");
+		deletableProcessStates.add("STATE_TERMINATED");
+		deletableProcessStates.add("STATE_COMPENSATED");
+		deletableProcessStates.add("STATE_FAILED");
+	}
 
 	private BFMJAXWSPortType bfm;
 
@@ -47,36 +58,50 @@ public class BfmManager {
 	 * 
 	 * @param appName
 	 */
-	public void deleteAllProcessInstances(String appName) {
+	public void forceDeleteAllProcessInstances(String appName) {
 		logger.debug("Deleting all process instances for application {}", appName);
-		List<String> piids = queryProcessInstances(appName);
-		deleteProcessInstances(piids);
+		List<ProcessInstance> processInstances = queryProcessInstances(appName);
+		terminateProcessInstances(processInstances);
+		deleteProcessInstances(processInstances);
 	}
 
-	private List<String> queryProcessInstances(String appName) {
+	private void terminateProcessInstances(List<ProcessInstance> processInstances) {
+		for (ProcessInstance processInstance : processInstances) {
+			if (!deletableProcessStates.contains(processInstance.getState())) {
+				logger.debug("Terminating process instance {}", processInstance);
+				try {
+					bfm.forceTerminate(processInstance.getPiid(), BigInteger.valueOf(0));
+				} catch (ProcessFaultMsg e) {
+					throw new RuntimeException("Unable to terminate process instance " + processInstance, e);
+				}
+			}
+		}
+	}
+
+	private List<ProcessInstance> queryProcessInstances(String appName) {
 		try {
-			QueryResultSetType result = bfm.query("DISTINCT PROCESS_INSTANCE.PIID", String.format("PROCESS_TEMPLATE.APPLICATION_NAME = '%s'", appName), null,
+			QueryResultSetType result = bfm.query("DISTINCT PROCESS_INSTANCE.PIID, PROCESS_INSTANCE.STATE", String.format("PROCESS_TEMPLATE.APPLICATION_NAME = '%s'", appName), null,
 					null, null, null);
 			logger.debug("Found {} process instances for application {}", result.getSize(), appName);
-			List<String> piidList = new ArrayList<>();
+			List<ProcessInstance> processList = new ArrayList<>();
 			for (QueryResultRowType row : result.getResult().getQueryResultRow()) {
-				String piid = (String) row.getValue().get(0);
-				logger.trace("Adding process instance with piid {} to query result", piid);
-				piidList.add(piid);
+				ProcessInstance processInstance = new ProcessInstance(row.getValue());
+				logger.trace("Adding process instance with piid {} to query result", processInstance);
+				processList.add(processInstance);
 			}
-			return piidList;
+			return processList;
 		} catch (ProcessFaultMsg e) {
 			throw new RuntimeException("Unable to query process instances", e);
 		}
 	}
 
-	private void deleteProcessInstances(List<String> piids) {
-		for (String piid : piids) {
+	private void deleteProcessInstances(List<ProcessInstance> processInstances) {
+		for (ProcessInstance processInstance : processInstances) {
 			try {
-				logger.debug("Deleting process instance with piid {}", piid);
-				bfm.delete(piid);
+				logger.debug("Deleting process instance with piid {}", processInstance);
+				bfm.delete(processInstance.getPiid());
 			} catch (ProcessFaultMsg e) {
-				throw new RuntimeException("Unable to delete process instance " + piid, e);
+				throw new RuntimeException("Unable to delete process instance " + processInstance, e);
 			}
 		}
 	}
