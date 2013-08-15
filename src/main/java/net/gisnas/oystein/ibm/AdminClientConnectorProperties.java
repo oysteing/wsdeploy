@@ -127,7 +127,7 @@ public class AdminClientConnectorProperties extends Properties {
 	 * AdminClientFactory does
 	 * 
 	 * @param properties
-	 * @return
+	 * @return an AdminClient
 	 */
 	public static AdminClient createAdminClient(AdminClientConnectorProperties properties) {
 		return createAdminClient(properties, null, null);
@@ -141,8 +141,8 @@ public class AdminClientConnectorProperties extends Properties {
 	 * 
 	 * @param properties
 	 * @param traceFile If set, trace logging is enabled and output to this file
-	 * @param traceString {@link http://pic.dhe.ibm.com/infocenter/wasinfo/v8r5/topic/com.ibm.websphere.base.doc/ae/utrb_loglevel.html}
-	 * @return
+	 * @param traceString according to <a href="http://pic.dhe.ibm.com/infocenter/wasinfo/v8r5/topic/com.ibm.websphere.base.doc/ae/utrb_loglevel.html">specification</a>
+	 * @return an AdminClient
 	 */
 	public static AdminClient createAdminClient(AdminClientConnectorProperties properties, File traceFile, String traceString) {
 		// It's a security risk to log all properties, which may include a

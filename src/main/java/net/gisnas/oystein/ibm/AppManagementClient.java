@@ -250,7 +250,7 @@ public class AppManagementClient implements NotificationListener {
 	 * 
 	 * Requires administrator role Configurator, Deployer or Administrator 
 	 * 
-	 * @param earPath
+	 * @param earFile
 	 * @param redeploy
 	 * @param appName
 	 * @param target
