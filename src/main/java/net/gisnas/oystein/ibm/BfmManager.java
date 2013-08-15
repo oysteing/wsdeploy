@@ -44,6 +44,7 @@ public class BfmManager {
 	 * @param password
 	 */
 	public BfmManager(String bfmJaxwsEndpoint, String username, String password) {
+		logger.debug("Preparing secured SOAP/HTTP connection (username {}) to Business Flow Manager at {}", username, bfmJaxwsEndpoint);
 		bfm = new BFMJAXWSService(wsdlLocation).getBFMJAXWSPort();
 		((BindingProvider) bfm).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, bfmJaxwsEndpoint);
 		((BindingProvider) bfm).getRequestContext().put(XWSSConstants.USERNAME_PROPERTY, username);
