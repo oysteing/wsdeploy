@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>net.gisnas.oystein.ibm</groupId>
 			<artifactId>business-flow-manager-proxy</artifactId>
-			<version>8.5.0-SNAPSHOT</version>
+			<version>8.5.0</version>
 		</dependency>
 
 		<!-- Using WSIT/Metro for web wervice security -->
