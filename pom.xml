@@ -114,11 +114,11 @@
 	<distributionManagement>
 		<repository>
 			<id>oysteing-cloudbees-snapshot</id>
-			<url>https://repository-oysteing.forge.cloudbees.com/release</url>
+			<url>dav:https://repository-oysteing.forge.cloudbees.com/release</url>
 		</repository>
 		<snapshotRepository>
 			<id>oysteing-cloudbees-snapshot</id>
-			<url>https://repository-oysteing.forge.cloudbees.com/snapshot</url>
+			<url>dav:https://repository-oysteing.forge.cloudbees.com/snapshot</url>
 		</snapshotRepository>
 	</distributionManagement>
 </project>
