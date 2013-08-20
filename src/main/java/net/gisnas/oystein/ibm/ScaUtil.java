@@ -63,7 +63,7 @@ public class ScaUtil {
 				}
 			}
 		}
-		throw new RuntimeException("No SCA module found in " + zipFile);
+		throw new RuntimeException("No SCA module found in " + zipFile.getName());
 	}
 
 	private static boolean isScaModule(ZipInputStream is) throws IOException {
